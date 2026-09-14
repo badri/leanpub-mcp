@@ -1,0 +1,22 @@
+{
+  "name": "leanpub-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for the Leanpub author API (preview, publish, royalties, coupons) — for when leanpub.com/api/mcp isn't up yet.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "leanpub-mcp": "bin/leanpub-mcp.js"
+  },
+  "scripts": {
+    "start": "node bin/leanpub-mcp.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.23.8"
+  },
+  "license": "MIT"
+}
