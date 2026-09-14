@@ -52,7 +52,35 @@ Or add to a specific project's `.mcp.json`:
     }
   }
 }
+
+### MCP client timeout for `wait_for_job`
+
+`wait_for_job` polls internally for up to `timeoutSeconds` (default 120),
+but that's a single MCP tool call the whole time -- most MCP clients kill a
+tool call after their own default request timeout (often 30s) regardless of
+what the server is doing internally, since this server sends no progress
+notifications. Confirmed live: a 180s `wait_for_job` call was killed at 30s
+with `Request timeout after 30000ms` even though the underlying Leanpub job
+finished fine.
+
+Fix: set a per-server timeout in your MCP client config, comfortably above
+whatever `timeoutSeconds` you pass. In Claude Code / OMP's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "leanpub": {
+      "command": "node",
+      "args": ["/absolute/path/to/leanpub-mcp/bin/leanpub-mcp.js"],
+      "timeout": 300000
+    }
+  }
+}
 ```
+
+Without that, just poll `get_job_status` directly in a loop (5s between
+calls, per Leanpub's own rate-limit guidance) instead of calling
+`wait_for_job`.
 
 ## Tools
 
